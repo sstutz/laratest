@@ -1,0 +1,8 @@
+.git/
+vendor/
+node_modules/
+kube/
+storage/logs/*
+bootstrap/cache/*
+.env*
+
