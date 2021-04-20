@@ -51,6 +51,7 @@
                             DB::connection()->getPDO();
                             echo DB::connection()->getDatabaseName();
                             } catch (\Exception $e) {
+                                echo $e->getMessage();
                             echo 'None';
                         }
                     @endphp

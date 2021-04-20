@@ -1,9 +1,11 @@
 FROM php:8.0.2-fpm-alpine3.13 AS base
 
-RUN apk add --no-cache curl libpng libjpeg-turbo freetype libzip libxml2 icu wkhtmltopdf shadow \
+RUN apk add --no-cache bash vim curl libpng libjpeg-turbo freetype libzip libxml2 icu wkhtmltopdf shadow \
      && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/main mpdecimal
 # keep in mind for private packages
 # RUN mkdir ~/.ssh && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+ARG ENVIRONMENT=production
+RUN mv "$PHP_INI_DIR/php.ini-${ENVIRONMENT}" "$PHP_INI_DIR/php.ini"
 
 FROM base AS phpbuild
 RUN apk add --no-cache $PHPIZE_DEPS coreutils libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev libxml2-dev icu-dev \
@@ -42,9 +44,9 @@ COPY . ./
 RUN yarn production
 
 FROM base AS release
-# Use these to override the default configuration
-COPY .docker/php/fpm.conf /usr/local/etc/php-fpm.d/zzz_custom.conf
 COPY .docker/php/conf.d/ $PHP_INI_DIR/conf.d/
+COPY .docker/php/start.sh /usr/local/bin/start
+COPY .docker/php/build.sh .
 
 COPY --from=phpbuild \
     /usr/local/lib/php/extensions/no-debug-non-zts-20200930 \
@@ -62,17 +64,12 @@ COPY --from=frontend \
     /var/www/html/public/js /var/www/html/public/css \
     /var/www/html/public/
 
-# Copy code
+RUN bash ./build.sh && rm ./build.sh
 COPY . /var/www/html
 
 RUN composer dump-autoload --optimize \
-    # && chmod u+x /usr/local/bin/start \
+    && chmod u+x /usr/local/bin/start \
     # && php artisan doctrine:generate:proxies -q \
-    # && php artisan route:cache \
     && echo ''
 
-WORKDIR /var/www/html
-
-EXPOSE 9000
-
-CMD ["php-fpm", "--nodaemonize", "--allow-to-run-as-root"]
+CMD ["/usr/local/bin/start"]

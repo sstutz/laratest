@@ -4,7 +4,9 @@ pushd "${0%/*}" 1>/dev/null
 
 # Default environment is production
 export APP_ENV=${APP_ENV:-prod}
-export APP_NAME="k8sapp"
+export VERSION=$(git rev-parse --short HEAD)
+export APP_NAME="hello_world"
+export APP_IMAGE="gcr.io/laravel/$APP_NAME:$VERSION"
 
 # MySQL defaults
 export DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-secret}
