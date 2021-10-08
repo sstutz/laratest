@@ -3,13 +3,20 @@ name: default
 
 steps:
   - name: backend
+    depends_on: [ clone  ]
   - name: frontend
+    depends_on: [ clone  ]
   - name: app
+    depends_on: [ backend, frontend ]
   - name: unit-test
+    depends_on: [ app ]
   - name: it-test
+    depends_on: [ app ]
     volumes:
     - name: dockersock
       path: /var/run
+    commands:
+      - earthly -P +it-test
 
 services:
 - name: docker
