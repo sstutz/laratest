@@ -2,7 +2,4 @@ kind: pipeline
 name: default
 
 steps:
-  - name: hello
-    commands:
-      - echo 'hello world.'
   - name: all
