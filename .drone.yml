@@ -11,21 +11,6 @@ steps:
   - name: unit-test
     depends_on: [ app ]
   - name: it-test
+    privileged: true
     depends_on: [ app ]
-    volumes:
-    - name: dockersock
-      path: /var/run
-    commands:
-      - earthly -P +it-test
 
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
