@@ -2,4 +2,8 @@ kind: pipeline
 name: default
 
 steps:
-  - name: all
+  - name: backend
+  - name: frontend
+  - name: app
+  - name: unit-test
+  - name: it-test

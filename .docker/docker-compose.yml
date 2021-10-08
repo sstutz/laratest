@@ -11,8 +11,6 @@ services:
 
   application:
     image: example:latest
-    env_file:
-      - ../.env
     ports:
       - "127.0.0.1:9000:9000"
 
@@ -28,7 +26,7 @@ services:
         - ../:/var/www/html
 
   pipeline:
-    image: drone/drone:2.4.0
+    image: drone/drone:latest
     ports:
       - 8080:80
     volumes:
