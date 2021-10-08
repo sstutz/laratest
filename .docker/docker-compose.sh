@@ -6,7 +6,7 @@ pushd "${0%/*}" 1>/dev/null
 export APP_ENV=${APP_ENV:-prod}
 export VERSION=$(git rev-parse --short HEAD)
 export APP_NAME="hello_world"
-export APP_IMAGE="gcr.io/laravel/$APP_NAME:$VERSION"
+export APP_IMAGE="example:latest"
 
 # MySQL defaults
 export DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-secret}
@@ -25,9 +25,9 @@ ensure_volume() {
 ensure_volume "portal_database"
 
 if [ $# -gt 0 ]; then
-    docker-compose "$@"
+    docker compose "$@"
 else
-    docker-compose ps
+    docker compose ps
 fi
 
 popd 1>/dev/null

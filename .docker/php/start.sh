@@ -11,6 +11,7 @@ if [ "$env" != "local"  ]; then
         && /usr/local/bin/php artisan config:cache \
         && /usr/local/bin/php artisan route:cache \
         && /usr/local/bin/php artisan view:cache \
+        && echo ''
     )
 fi
 
